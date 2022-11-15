@@ -19,6 +19,7 @@ export const getSystemInfo = async (): Promise<ISystemInformation> => {
     networkInterfaces: []
   }
 
+  // Fetch data & modify object
   const [var_cpu, var_system, var_mem, var_os, var_currentLoad, var_processes, var_diskLayout, var_networkInterfaces] = await Promise.all([
     si.cpu(),
     si.system(),
@@ -38,25 +39,6 @@ export const getSystemInfo = async (): Promise<ISystemInformation> => {
   sysInfo.processes = var_processes;
   sysInfo.diskLayout = var_diskLayout;
   sysInfo.networkInterfaces = var_networkInterfaces;
-  
-  /*
-  // Fetch data & modify object
-  await si.cpu().then((data => sysInfo.cpu = data))
-    .catch(error => console.error(error))
-  .then(() => si.system()).then((data => sysInfo.system = data))
-    .catch(error => console.error(error))
-  .then(() => si.mem()).then((data => sysInfo.mem = data))
-    .catch(error => console.error(error))
-  .then(() => si.osInfo()).then((data => sysInfo.os = data))
-    .catch(error => console.error(error))
-  .then(() => si.currentLoad()).then((data => sysInfo.currentLoad = data))
-    .catch(error => console.error(error))
-  .then(() => si.processes()).then((data => sysInfo.processes = data))
-    .catch(error => console.error(error))
-  .then(() => si.diskLayout()).then((data => sysInfo.diskLayout = data))
-    .catch(error => console.error(error))
-  .then(() => si.networkInterfaces()).then((data => sysInfo.networkInterfaces = data))
-    .catch(error => console.error(error))*/
 
   return sysInfo;
 }
