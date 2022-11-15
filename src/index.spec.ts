@@ -1,8 +1,33 @@
-import { helloWorld, getSystemInfo } from './index';
+import { getSystemInfo, startServer } from './index';
+import fetch from 'node-fetch'
 
-describe('typeScript test suite', () => {
-  it('should return "Hello world!"', () => {
-    expect.assertions(1);
-    expect(helloWorld()).toBe('Hello world!');
+describe('object system data test', () => {
+  it('should have all required fields', async () => {
+    const data = await getSystemInfo();
+    expect(data).toHaveProperty('cpu');
+    expect(data).toHaveProperty('system');
+    expect(data).toHaveProperty('mem');
+    expect(data).toHaveProperty('os');
+    expect(data).toHaveProperty('currentLoad');
+    expect(data).toHaveProperty('processes');
+    expect(data).toHaveProperty('diskLayout');
+    expect(data).toHaveProperty('networkInterfaces');
+    expect(data).not.toHaveProperty('osInfo');
+  })
+});
+
+describe('server test', () => {
+  it('should return 200 status with right url', async () => {
+    startServer();
+    const response = await fetch('http://localhost:8000/api/v1/sysinfo', {method: 'GET'});
+    expect(response.status).toEqual(200);
+  });
+});
+
+describe('server test', () => {
+  it('should return 404 error with wrong url', async () => {
+    startServer();
+    const response = await fetch('http://localhost:8000', {method: 'GET'});
+    expect(response.status).toEqual(404);
   });
 });
