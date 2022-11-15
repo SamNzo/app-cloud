@@ -1,4 +1,4 @@
-import { helloWorld } from './index';
+import { helloWorld, getSystemInfo } from './index';
 
 describe('typeScript test suite', () => {
   it('should return "Hello world!"', () => {
