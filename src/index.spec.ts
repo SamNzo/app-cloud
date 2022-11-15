@@ -1,5 +1,8 @@
-import { getSystemInfo, startServer } from './index';
-import fetch from 'node-fetch'
+import { createMyServer, getSystemInfo, startMyServer } from './index';
+import fetch from 'node-fetch';
+
+
+jest.setTimeout(20000);
 
 describe('object system data test', () => {
   it('should have all required fields', async () => {
@@ -18,16 +21,20 @@ describe('object system data test', () => {
 
 describe('server test', () => {
   it('should return 200 status with right url', async () => {
-    startServer();
+    const server = createMyServer();
+    startMyServer(server);
     const response = await fetch('http://localhost:8000/api/v1/sysinfo', {method: 'GET'});
     expect(response.status).toEqual(200);
+    server.close((err) => console.log(err));
   });
 });
 
 describe('server test', () => {
   it('should return 404 error with wrong url', async () => {
-    startServer();
+    const server = createMyServer();
+    startMyServer(server);
     const response = await fetch('http://localhost:8000', {method: 'GET'});
     expect(response.status).toEqual(404);
+    server.close((err) => console.log(err));
   });
 });

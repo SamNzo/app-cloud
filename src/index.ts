@@ -44,7 +44,7 @@ export const getSystemInfo = async (): Promise<ISystemInformation> => {
 }
 
 // Create a server object:
-export const startServer = () => {
+export const createMyServer = () => {
   return http.createServer(async function (req, res) {
     // App only responds to http://localhost/api/v1/sysinfo
     if (req.url === "/api/v1/sysinfo") {
@@ -62,6 +62,7 @@ export const startServer = () => {
     });
 }
 
+export function startMyServer(server: http.Server) {
 // Start server
-startServer().listen(8000); // the server object listens on port 8000;
-
+server.listen(8000); // the server object listens on port 8000;
+}
