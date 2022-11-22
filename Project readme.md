@@ -163,3 +163,12 @@ The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
 #### Tests
 #### Results
 
+## Docker
+Build image
+```shell
+docker build -t sysinfo-api:0.0.1 .
+```
+Run image
+```shell
+docker run -p 8123:8000 -m1024m --cpus=1 sysinfo-api:0.0.1
+```
