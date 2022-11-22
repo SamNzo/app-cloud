@@ -1,10 +1,33 @@
-import { createMyServer, getSystemInfo, startMyServer } from './index';
+import { createMyServer, getSystemInfo, startMyServer, closeMyServer } from './server';
 import fetch from 'node-fetch';
 
-
+// Increase timeout duration
 jest.setTimeout(20000);
+// Create server
+const server = createMyServer();
+// Choose port number
+const port: number = 8100;
 
-describe('object system data test', () => {
+
+describe('sysinfo api test', () => {
+  // Before tests start
+  beforeAll(() => {
+    // Start server
+    startMyServer(server, port);
+  })
+  // After tests end
+  afterAll(() => {
+    // Close server
+    closeMyServer(server);
+  })
+  it('should return 200 status with right url', async () => {
+    const response = await fetch(`http://localhost:${port}/api/v1/sysinfo`, {method: 'GET'});
+    expect(response.status).toBe(200);
+  });
+  it('should return 404 error with wrong url', async () => {
+    const response = await fetch(`http://localhost:${port}`, {method: 'GET'});
+    expect(response.status).toBe(404);
+  });
   it('should have all required fields', async () => {
     const data = await getSystemInfo();
     expect(data).toHaveProperty('cpu');
@@ -19,22 +42,3 @@ describe('object system data test', () => {
   })
 });
 
-describe('server test', () => {
-  it('should return 200 status with right url', async () => {
-    const server = createMyServer();
-    startMyServer(server);
-    const response = await fetch('http://localhost:8000/api/v1/sysinfo', {method: 'GET'});
-    expect(response.status).toBe(200);
-    server.close((err) => console.log(err));
-  });
-});
-
-describe('server test', () => {
-  it('should return 404 error with wrong url', async () => {
-    const server = createMyServer();
-    startMyServer(server);
-    const response = await fetch('http://localhost:8000', {method: 'GET'});
-    expect(response.status).toBe(404);
-    server.close((err) => console.log(err));
-  });
-});
