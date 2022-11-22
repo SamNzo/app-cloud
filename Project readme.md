@@ -172,3 +172,15 @@ Run image
 ```shell
 docker run -p 8123:8000 -m1024m --cpus=1 sysinfo-api:0.0.1
 ```
+Tag
+```shell
+docker tag sysinfo-api:0.0.1 samnzo/sysinfo-api:0.0.1
+```
+Push
+```shell
+docker push samnzo/sysinfo-api:0.0.2
+```
+Pull from hub
+```shell
+docker pull samnzo/sysinfo-api:0.0.1
+```

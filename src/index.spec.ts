@@ -24,7 +24,7 @@ describe('server test', () => {
     const server = createMyServer();
     startMyServer(server);
     const response = await fetch('http://localhost:8000/api/v1/sysinfo', {method: 'GET'});
-    expect(response.status).toEqual(200);
+    expect(response.status).toBe(200);
     server.close((err) => console.log(err));
   });
 });
@@ -34,7 +34,7 @@ describe('server test', () => {
     const server = createMyServer();
     startMyServer(server);
     const response = await fetch('http://localhost:8000', {method: 'GET'});
-    expect(response.status).toEqual(404);
+    expect(response.status).toBe(404);
     server.close((err) => console.log(err));
   });
 });

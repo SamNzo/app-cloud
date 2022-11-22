@@ -8,7 +8,7 @@ import { ISystemInformation } from './interface';
  * @returns An object with all fetched data
  */
 export const getSystemInfo = async (): Promise<ISystemInformation> => {
-  let sysInfo: ISystemInformation = {
+  const sysInfo: ISystemInformation = {
     cpu: undefined,
     system: undefined,
     mem: undefined,
