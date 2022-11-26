@@ -4,19 +4,19 @@ on:
   push:
     branches:
       - main
-      jobs:
-        Explore-GitHub-Actions:
-          runs-on: alpine:3.15
-          steps:
-            - name: Install Node
-              run: 
-                apk add --update nodejs
-            - name: Install npm
-              run:
-                apk add --update npm
-            - name: Install dependencies
-              run:
-                npm ci
-            - name: Run app tests
-              run:
-                npm run test
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: alpine:3.15
+    steps:
+      - name: Install Node
+        run: 
+          apk add --update nodejs
+      - name: Install npm
+        run:
+          apk add --update npm
+      - name: Install dependencies
+        run:
+          npm ci
+      - name: Run app tests
+        run:
+          npm run test
