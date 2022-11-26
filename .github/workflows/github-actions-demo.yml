@@ -6,7 +6,7 @@ on:
       - main
 jobs:
   Explore-GitHub-Actions:
-    runs-on: alpine:3.15
+    runs-on: ubuntu-latest
     steps:
       - name: Install Node
         run: 
