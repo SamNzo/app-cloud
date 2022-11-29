@@ -164,23 +164,77 @@ The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
 #### Results
 
 ## Docker
+---
 Build image
 ```shell
-docker build -t sysinfo-api:0.0.1 .
+docker build -t sysinfo-api:0.0.x .
 ```
 Run image
 ```shell
-docker run -p 8123:8000 -m1024m --cpus=1 sysinfo-api:0.0.1
+docker run -p 8123:8000 -m1024m --cpus=1 sysinfo-api:0.0.x
 ```
 Tag
 ```shell
-docker tag sysinfo-api:0.0.1 samnzo/sysinfo-api:0.0.1
+docker tag sysinfo-api:0.0.x samnzo/sysinfo-api:0.0.x
 ```
 Push
 ```shell
-docker push samnzo/sysinfo-api:0.0.2
+docker push samnzo/sysinfo-api:0.0.x
 ```
 Pull from hub
 ```shell
-docker pull samnzo/sysinfo-api:0.0.1
+docker pull samnzo/sysinfo-api:0.0.x
 ```
+
+## Github Actions
+---
+https://resources.github.com/whitepapers/github-actions-cheat/
+```yml
+name: System info API test
+run-name: ${{ github.actor }} tests ☁️
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Check out repository
+      - uses: actions/setup-node@v1
+        name: Set up Node.js
+        with:
+          node-version: 16.15.1
+      - run: |
+          npm ci
+          npm run build
+          npm run test:coverage
+        name: Build and Test app
+```
+
+![[Pasted image 20221129085155.png|600]]
+
+### Deployment
+---
+Install flyctl
+```powershell
+iwr https://fly.io/install.ps1 -useb | iex
+```
+Log in
+```powershell
+flyctl auth login
+```
+Launch & Deploy
+```powershell
+flyctl launch --image samnzo/sysinfo-api:0.0.2
+flyctl deploy
+```
+
+Deployment doesn't work at first because we need to put the port we use (8000) in the **fly.toml** file (8080 → 8000).
+
+Succesfully deployed  ✔️ 
+https://sysinfo-api-sam.fly.dev/
+
+#### Continuous deployment
+
