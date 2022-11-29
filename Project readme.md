@@ -6,7 +6,8 @@
 ---
 
 ### 1. Environment
-I chose to use Windows as my environment since I already had node installed on it.
+I chose to use Windows as my environment.
+"Pain is inevitable, suffering is optional." —Buddhist Proverb
 
 ### 2. Package files
 The file ``package.json`` contains info about:
