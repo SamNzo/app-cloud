@@ -163,7 +163,7 @@ The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
 #### Tests
 #### Results
 
-## Docker
+### Docker
 ---
 Build image
 ```shell
@@ -186,7 +186,7 @@ Pull from hub
 docker pull samnzo/sysinfo-api:0.0.x
 ```
 
-## Github Actions
+### Github Actions
 ---
 https://resources.github.com/whitepapers/github-actions-cheat/
 ```yml
