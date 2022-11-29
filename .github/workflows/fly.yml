@@ -1,4 +1,5 @@
 name: Fly Deploy
+run-name: Continuous deployment 🚀
 on:
   push:
     branches:

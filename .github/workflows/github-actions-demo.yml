@@ -1,5 +1,5 @@
 name: System info API test
-run-name: ${{ github.actor }} tests ☁️
+run-name: App tests ☁️
 on:
   push:
     branches:
