@@ -108,7 +108,7 @@ The formalism used to build the API url allows different versions *(v1, v2, ...)
 ---
 [Jest](https://jestjs.io/fr/) is a JavaScript testing framework.
 The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
-```JSON
+```
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
@@ -131,11 +131,11 @@ Data tests:
 ### Docker
 ---
 I created two Docker images:
-- samnzo/sysinfo-api:0.0.1
-- samnzo/sysinfo-api:0.0.2
+- samnzo/sysinfo-api:0.0.1 (177.99 MB)
+- samnzo/sysinfo-api:0.0.2 (53.85 MB)
 
 The second one is way lighter than the second one because it only contains dependencies used for production (see [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/))
----
+
 Build image
 ```shell
 docker build -t sysinfo-api:0.0.x .
