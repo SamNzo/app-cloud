@@ -189,7 +189,7 @@ jobs:
           npm run test:coverage
         name: Build and Test app
 ```
-
+We can see the workflow:
 ![alttext](screenshots/tests.png)
 
 ### Deployment
