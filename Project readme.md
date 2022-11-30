@@ -7,9 +7,10 @@
 
 ### 1. Environment
 I chose to use Windows as my environment.
-"Pain is inevitable, suffering is optional." —Buddhist Proverb
 
-### 2. Package files
+"Pain is inevitable, suffering is optional." *—Buddhist Proverb*
+
+### Package files
 The file ``package.json`` contains info about:
 - the project (name, author, github url, dependencies versions...)
 - script commands (describe commands to execute with specified names)
@@ -41,75 +42,28 @@ The file contains (among others) the fields **dependencies** and **devDependenci
 The first one lists the installed modules *for the app to use*.
 The second lists the development modules used to *build the app*.
 
-### 4. App code
-
-The code for the app is distributed in 2 files:
-- index.ts
+### App code
+---
+The code for the app is distributed in 3 files:
+- server.ts
 - interface.ts
+- index.ts
 
-The first one contains the code responsible for the app logic (create http server, handle requests & get system information). System information is retrieved with the **getSystemInfo** function.
-```typescript
-// Create a server object:
-http.createServer(function (req, res) {
-  // App only responds to http://localhost/api/v1/sysinfo
-  if (req.url === "/api/v1/sysinfo") {
-    const data = getSystemInfo();
-  }
-  // Return 404 error else
-  else {
-    res.statusCode = 404;
-    res.statusMessage = "Wrong url";
-  }
-  // End request
-  res.end();
-  })
-  .listen(8000); // the server object listens on port 8080
-```
-Since the [functions](https://systeminformation.io/) used to fetch data are asynchronous I chained all calls to retrieve data so that a data is fetched when the previous one has been retrieved.
-This way we are certain to have all wanted information inside our ``sysInfo`` variable.
-```typescript
-// Fetch data & modify object
-  await si.cpu().then((data => sysInfo.cpu = data))
-    .catch(error => console.error(error))
-  .then(() => si.system()).then((data => sysInfo.system = data))
-    .catch(error => console.error(error))
-  .then(() => si.mem()).then((data => sysInfo.mem = data))
-    .catch(error => console.error(error))
-  .then(() => si.osInfo()).then((data => sysInfo.os = data))
-    .catch(error => console.error(error))
-  .then(() => si.currentLoad()).then((data => sysInfo.currentLoad = 
-    data))
-    .catch(error => console.error(error))
-  .then(() => si.processes()).then((data => sysInfo.processes = data))
-    .catch(error => console.error(error))
-  .then(() => si.diskLayout()).then((data => sysInfo.diskLayout = 
-    data))
-    .catch(error => console.error(error))
-  .then(() => si.networkInterfaces()).then((data => 
-    sysInfo.networkInterfaces = data))
-    .catch(error => console.error(error))
-  .finally(() => {
-    console.log(sysInfo);
-    return sysInfo;
-  })
-```
-The second file only contains the interface defining the data we are fetching:
-```typescript
-interface ISystemInformation {
-    cpu: si.Systeminformation.CpuData;
-    system: si.Systeminformation.SystemData;
-    mem: si.Systeminformation.MemData;
-    os: si.Systeminformation.OsData;
-    currentLoad: si.Systeminformation.CurrentLoadData;
-    processes: si.Systeminformation.ProcessesData;
-    diskLayout: si.Systeminformation.DiskLayoutData[];
-    networkInterfaces: si.Systeminformation.NetworkInterfacesData[];
-}
-```
+The first one contains methods to:
+- create a http server
+- start & close the server
+- fetch system info
 
-### 5. Curl test
+The second one describes the format of the data we want to retrieve.
+
+Finally, the last one calls the methods defined in the other two.
+
+This organisation makes it easier to understand and modify the code.
+
+### Curl test
+---
 With the command ``curl http://localhost:8000/api/v1/sysinfo`` we get:
-```JSON
+```
 system: {
     manufacturer: 'ASUSTeK COMPUTER INC.',
     model: 'VivoBook_ASUSLaptop X571GT_A571GT',
@@ -137,7 +91,7 @@ system: {
 The data retrieved is way bigger and includes all properties defined in the interface which is why I only gave **system** and **mem** as an example above.
 
 A request to ``http://localhost:8000`` returns the following:
-```powershell
+```
 curl : Le serveur distant a retourné une erreur: (404) 
 Introuvable.
 Au caractère Ligne:1 : 1
@@ -150,8 +104,9 @@ Au caractère Ligne:1 : 1
 ```
 
 The formalism used to build the API url allows different versions *(v1, v2, ...)* that could each point toward different information. It gives developpers some freedom.
-### 6. Jest testing ![[file-type-jest.svg|20]]
-Jest is a JavaScript testing framework.
+### Jest testing
+---
+[Jest](https://jestjs.io/fr/) is a JavaScript testing framework.
 The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
 ```JSON
 {
@@ -162,9 +117,24 @@ The file **.jestrc.json** indicates that tests are written in **index.spec.ts**:
 ```
 
 #### Tests
-#### Results
+I chose to test the server and the fetched data.
+
+Server tests:
+- a request to a wrong url should return a 404 error
+- a request to the right url (api/v1/sysinfo) should return a 202 status code (success)
+
+Data tests:
+- data fetched should have all required fields
+
+![alttext](screenshots/test-coverage.png)
 
 ### Docker
+---
+I created two Docker images:
+- samnzo/sysinfo-api:0.0.1
+- samnzo/sysinfo-api:0.0.2
+
+The second one is way lighter than the second one because it only contains dependencies used for production (see [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/))
 ---
 Build image
 ```shell
@@ -178,7 +148,7 @@ Tag
 ```shell
 docker tag sysinfo-api:0.0.x samnzo/sysinfo-api:0.0.x
 ```
-Push
+Push to [Docker Hub](https://hub.docker.com/)
 ```shell
 docker push samnzo/sysinfo-api:0.0.x
 ```
@@ -189,7 +159,13 @@ docker pull samnzo/sysinfo-api:0.0.x
 
 ### Github Actions
 ---
-https://resources.github.com/whitepapers/github-actions-cheat/
+For continuous integration the [tests are automatically performed](https://resources.github.com/whitepapers/github-actions-cheat/) everytime a push is made to the main branch.
+
+Everytime a push is made to main:
+- dependencies are installed ``npm ci``
+- app is compiled ``npm run build``
+- tests are performed ``npm run test:coverage``
+
 ```yml
 name: System info API test
 run-name: ${{ github.actor }} tests ☁️
@@ -214,10 +190,12 @@ jobs:
         name: Build and Test app
 ```
 
-![[Pasted image 20221129085155.png|600]]
+![alttext](screenshots/tests.png)
 
 ### Deployment
 ---
+I used [fly.io](fly.io) to deploy the api.
+
 Install flyctl
 ```powershell
 iwr https://fly.io/install.ps1 -useb | iex
@@ -238,4 +216,9 @@ Succesfully deployed  ✔️
 https://sysinfo-api-sam.fly.dev/
 
 #### Continuous deployment
+For continuous deployment the app is deployed everytime a push is made to the main branch.
+
+![alttext](screenshots/workflows.png)
+
+
 
