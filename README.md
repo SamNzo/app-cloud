@@ -135,7 +135,7 @@ I created two Docker images:
 - samnzo/sysinfo-api:0.0.2 (53.85 MB)
 
 The second one is way lighter than the second one because it only contains dependencies used for production (see [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/))
----
+
 Build image
 ```shell
 docker build -t sysinfo-api:0.0.x .
